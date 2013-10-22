@@ -1,9 +1,6 @@
 import sqlite3
 import datetime
 
-# ADMIN_USER="hackbright"
-# ADMIN_PASSWORD=5980025637247534551
-
 DB = None
 CONN = None
 
@@ -55,14 +52,24 @@ def create_wallpost(author_id, content, owner_id):
     author = get_user_by_name(author_id)
     owner = get_user_by_name(owner_id)
     query = """INSERT INTO wall_posts VALUES (null, ?, ?, ?, ?)"""
-    DB.execute(query, (owner, author, post_date, content,))
+    DB.execute(query, (owner[0], author[0], post_date, content,))
     CONN.commit()
-    return "posted!"
 
+def create_user(username, password):
+    query = """INSERT INTO users VALUES (null, ?, ?)"""
+    DB.execute(query, (username, password,))
+    CONN.commit()
 
-# def insert():
-#     query = """insert into wall_posts values (null, 0, 0, ?, ?)"""
-#     DB.execute(query, (datetime.datetime.now(), "Some text") )
+def user_exists(username):
+    query = """SELECT username FROM users"""
+    DB.execute(query)
+    existing_users = DB.fetchall()
+    for user in existing_users:
+        print user, username
+        if user[0] == username:
+            return True
+    return False
+
 	
 def main():
     connect_to_db()

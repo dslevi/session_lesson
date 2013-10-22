@@ -6,11 +6,11 @@ app.secret_key = "shhhhthisisasecret"
 
 @app.route("/")
 def index():
-    if session.get("username"):
-        # model.connect_to_db()
-        #username = model.get_user_by_id(session.get("user_id"))
-        # return redirect(url_for('view_user', username=username))
-        return "Hello, user %d"%session.get("username")
+    if session.get("user_id"):
+        model.connect_to_db()
+        user_id = session["user_id"]
+        username = model.get_user_by_id(user_id[0])
+        return redirect(url_for('view_user', username=username))
     else:
         return render_template("index.html")
 
@@ -44,15 +44,46 @@ def post_to_wall():
     user_id = session['user_id']
     author_name = model.get_user_by_id(user_id[0])
     content = request.form.get("content")
-    print content
     username = request.form.get("username")
-    print username
     model.create_wallpost(author_name, content, username)
     return redirect(url_for("view_user", username = username))
 
 @app.route("/register")
 def register():
+    if session.get("user_id"):
+        user_id = session['user_id']
+        username = model.get_user_by_id(user_id[0])
+        return redirect(url_for("view_user", username=username))
     return render_template("register.html")
+
+@app.route("/create_account", methods=["POST"])
+def create_account():
+    model.connect_to_db()
+    if session.get("user_id"):
+        user_id = session['user_id']
+        username = model.get_user_by_id(user_id[0])
+        return redirect(url_for("view_user", username=username))
+
+    username = request.form.get("username")
+    if model.user_exists(username):
+        flash("This username already exists.")
+        print "user exists"
+        return redirect(url_for("register"))
+
+    password = request.form.get("password")
+    print password
+    verify = request.form.get("password_verify")
+    print verify
+    if password == verify:
+        model.create_user(username, password)
+        flash("New user account was created.")
+        print "created"
+        return redirect(url_for("index"))
+    else:
+        flash("Passwords do not match.")
+        print "passwords mismatch"
+        return redirect(url_for("register"))
+        
 
 @app.route("/clear")
 def clear():
