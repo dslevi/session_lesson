@@ -1,20 +1,36 @@
 {% extends 'master.html' %}
 {% block body %}
-    {{username}}'s wall.
-    {% if logged_in %}
-        <form method="POST" action="/post">
-            <textarea rows="4" cols="20" name="content">Put text here</textarea><br><br>
-            <input type="hidden" name="username" value={{username}}>
-            <input type="submit" value="Submit">
-        </form>
-    {% endif %}
-    {% for post in posts%}
-        <div>
-            <p>
-            {% for line in post %}
-                {{line}}<br>
-            {% endfor %}
-            <p>
-        </div>
-    {% endfor %}
+    <div class="homeBar">
+        <p id ="home">
+            Home |
+            Sign out |
+            View users
+        <p>
+    </div>
+    <div class="posting">
+        <h2>{{username}}</h2>
+        {% if logged_in %}
+            <form method="POST" action="/post" class="postMsg">
+                <textarea rows="5" cols="55" name="content">Say hi!</textarea><br>
+                <input type="hidden" name="username" value={{username}}>
+                <input type="submit" value="Post message" class="btn">
+            </form>
+        {% endif %}
+    </div>
+    <div class="wallPosts">
+        <h3>Wall posts</h3>
+        {% for post in posts%}
+            <div>
+                <p>
+                {% for line in post %}
+                    {% if loop.index == 2 %}
+                        <a href="/user/{{line}}">{{line}}</a><br>
+                    {% else %}
+                        {{line}}<br>
+                    {% endif %}
+                {% endfor %}
+                <p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -6,6 +6,10 @@ body {
     background-color: #eee; 
 }
 
+form.postMsg input.btn {
+    margin-top: 10px;
+}
+
 form.signin {
     width: 330px;
     margin: 50px auto;
@@ -17,4 +21,26 @@ form.signin input.form-control {
 
 form.signin input.btn {
     margin-top: 15px;
+}
+
+.posting {
+    float:left;
+    margin-left: 20px;
+}
+
+.wallPosts {
+    float:left;
+    margin-left: 50px;
+    margin-top: 5px;
+}
+
+.homeBar {
+    background-color: black;
+    color: white;
+    width: 100%;
+}
+
+#home {
+    padding: 7px;
+    padding-left: 30px;
 }
