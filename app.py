@@ -7,10 +7,7 @@ app.secret_key = "shhhhthisisasecret"
 @app.route("/")
 def index():
     if session.get("user_id"):
-        model.connect_to_db()
-        user_id = session["user_id"]
-        username = model.get_user_by_id(user_id[0])
-        return redirect(url_for('view_user', username=username))
+        go_home()
     else:
         return render_template("index.html")
 
@@ -51,19 +48,15 @@ def post_to_wall():
 @app.route("/register")
 def register():
     if session.get("user_id"):
-        user_id = session['user_id']
-        username = model.get_user_by_id(user_id[0])
-        return redirect(url_for("view_user", username=username))
+        go_home()
     return render_template("register.html")
 
 @app.route("/create_account", methods=["POST"])
 def create_account():
-    model.connect_to_db()
     if session.get("user_id"):
-        user_id = session['user_id']
-        username = model.get_user_by_id(user_id[0])
-        return redirect(url_for("view_user", username=username))
+        go_home()
 
+    model.connect_to_db()
     username = request.form.get("username")
     if model.user_exists(username):
         flash("This username already exists.")
@@ -79,11 +72,24 @@ def create_account():
         flash("Passwords do not match.")
         return redirect(url_for("register"))
         
+@app.route("/home")
+def go_home():
+    model.connect_to_db()
+    user_id = session['user_id']
+    username = model.get_user_by_id(user_id[0])
+    return redirect(url_for("view_user", username=username))
 
 @app.route("/clear")
 def clear():
     session.clear()
+    flash("User signed out.")
     return redirect(url_for("index"))
+
+@app.route("/all_users")
+def show_all_users():
+    model.connect_to_db()
+    users = model.get_all_users()
+    return render_template("all_user.html", users=users)
 
 if __name__ == "__main__":
     app.run(debug = True)

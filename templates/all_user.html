@@ -1,0 +1,18 @@
+{% extends 'master.html' %}
+{% block body %}
+    <div class="homeBar">
+        <p id ="home">
+            <a href="/home">Home</a> |
+            <a href="/clear">Sign out</a> |
+            <a href="/all_users">View users</a>
+        <p>
+    </div>
+    <h2>All users</h2>
+    <div>
+        {% for user in users %}
+            {% for name in user %}
+                <a href="/user/{{name}}">{{name}}</a><br>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}

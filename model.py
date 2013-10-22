@@ -21,6 +21,12 @@ def get_user_by_name(username):
     user_id = DB.fetchone()
     return user_id
 
+def get_all_users():
+    query = """SELECT username FROM users"""
+    DB.execute(query)
+    users = DB.fetchall()
+    return users
+
 def get_user_by_id(user_id):
     query = """SELECT username FROM users WHERE id = ?"""
     DB.execute(query, (user_id,))

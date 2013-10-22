@@ -34,6 +34,9 @@ form.signin input.btn {
     margin-top: 5px;
 }
 
+#date {
+    color: gray;
+}
 .homeBar {
     background-color: black;
     color: white;
